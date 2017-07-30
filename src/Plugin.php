@@ -12,7 +12,7 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 class Plugin {
 
 	public static $name = 'Drbl Plugin';
-	public static $description = 'Allows handling of Drbl emails and honeypots';
+	public static $description = 'Allows handling of Drbl based Backups';
 	public static $help = '';
 	public static $type = 'plugin';
 
