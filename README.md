@@ -24,5 +24,5 @@ composer require detain/myadmin-drbl-backups
 
 ## License
 
-The Drbl handling plugin for MyAdmin class is licensed under the LGPL-v2 license.
+The Drbl handling plugin for MyAdmin class is licensed under the LGPL-v2.1 license.
 
