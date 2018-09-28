@@ -1,5 +1,5 @@
 {
-	"name": "detain/drbl-backups",
+	"name": "detain/myadmin-drbl-backups",
 	"type": "myadmin-plugin",
 	"description": "Drbl handling plugin for MyAdmin",
 	"keywords": [
