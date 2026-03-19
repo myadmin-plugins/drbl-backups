@@ -1,28 +1,39 @@
-# Drbl handling plugin for MyAdmin
+# MyAdmin DRBL Backups Plugin
 
-Drbl handling plugin for MyAdmin
+[![Tests](https://github.com/detain/myadmin-drbl-backups/actions/workflows/tests.yml/badge.svg)](https://github.com/detain/myadmin-drbl-backups/actions/workflows/tests.yml)
+[![Latest Stable Version](https://poser.pugx.org/detain/myadmin-drbl-backups/version)](https://packagist.org/packages/detain/myadmin-drbl-backups)
+[![Total Downloads](https://poser.pugx.org/detain/myadmin-drbl-backups/downloads)](https://packagist.org/packages/detain/myadmin-drbl-backups)
+[![License](https://poser.pugx.org/detain/myadmin-drbl-backups/license)](https://packagist.org/packages/detain/myadmin-drbl-backups)
 
-## Build Status and Code Analysis
+DRBL (Diskless Remote Boot in Linux) backup handling plugin for the MyAdmin control panel. This plugin provides event-driven integration for managing DRBL-based backup services, including menu registration, requirement loading, and settings management through the Symfony EventDispatcher component.
 
-Site          | Status
---------------|---------------------------
-![Travis-CI](http://i.is.cc/storage/GYd75qN.png "Travis-CI")     | [![Build Status](https://travis-ci.org/detain/myadmin-drbl-backups.svg?branch=master)](https://travis-ci.org/detain/myadmin-drbl-backups)
-![CodeClimate](http://i.is.cc/storage/GYlageh.png "CodeClimate")  | [![Code Climate](https://codeclimate.com/github/detain/myadmin-drbl-backups/badges/gpa.svg)](https://codeclimate.com/github/detain/myadmin-drbl-backups) [![Test Coverage](https://codeclimate.com/github/detain/myadmin-drbl-backups/badges/coverage.svg)](https://codeclimate.com/github/detain/myadmin-drbl-backups/coverage) [![Issue Count](https://codeclimate.com/github/detain/myadmin-drbl-backups/badges/issue_count.svg)](https://codeclimate.com/github/detain/myadmin-drbl-backups)
-![Scrutinizer](http://i.is.cc/storage/GYeUnux.png "Scrutinizer")   | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/myadmin-plugins/drbl-backups/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/myadmin-plugins/drbl-backups/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/myadmin-plugins/drbl-backups/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/myadmin-plugins/drbl-backups/?branch=master) [![Build Status](https://scrutinizer-ci.com/g/myadmin-plugins/drbl-backups/badges/build.png?b=master)](https://scrutinizer-ci.com/g/myadmin-plugins/drbl-backups/build-status/master)
-![Codacy](http://i.is.cc/storage/GYi66Cx.png "Codacy")        | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/226251fc068f4fd5b4b4ef9a40011d06)](https://www.codacy.com/app/detain/myadmin-drbl-backups) [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/25fa74eb74c947bf969602fcfe87e349)](https://www.codacy.com/app/detain/myadmin-drbl-backups?utm_source=github.com&utm_medium=referral&utm_content=detain/myadmin-drbl-backups&utm_campaign=Badge_Coverage)
-![Coveralls](http://i.is.cc/storage/GYjNSim.png "Coveralls")    | [![Coverage Status](https://coveralls.io/repos/github/detain/db_abstraction/badge.svg?branch=master)](https://coveralls.io/github/detain/myadmin-drbl-backups?branch=master)
-![Packagist](http://i.is.cc/storage/GYacBEX.png "Packagist")     | [![Latest Stable Version](https://poser.pugx.org/detain/myadmin-drbl-backups/version)](https://packagist.org/packages/detain/myadmin-drbl-backups) [![Total Downloads](https://poser.pugx.org/detain/myadmin-drbl-backups/downloads)](https://packagist.org/packages/detain/myadmin-drbl-backups) [![Latest Unstable Version](https://poser.pugx.org/detain/myadmin-drbl-backups/v/unstable)](//packagist.org/packages/detain/myadmin-drbl-backups) [![Monthly Downloads](https://poser.pugx.org/detain/myadmin-drbl-backups/d/monthly)](https://packagist.org/packages/detain/myadmin-drbl-backups) [![Daily Downloads](https://poser.pugx.org/detain/myadmin-drbl-backups/d/daily)](https://packagist.org/packages/detain/myadmin-drbl-backups) [![License](https://poser.pugx.org/detain/myadmin-drbl-backups/license)](https://packagist.org/packages/detain/myadmin-drbl-backups)
+## Requirements
 
+- PHP 8.1 or higher
+- ext-soap
+- Symfony EventDispatcher ^5.0 / ^6.0 / ^7.0
 
 ## Installation
-
-Install with composer like
 
 ```sh
 composer require detain/myadmin-drbl-backups
 ```
 
+## Usage
+
+The plugin registers itself through the MyAdmin plugin system via event hooks. It provides:
+
+- **Menu integration** -- Registers admin menu entries for backup management
+- **Requirement loading** -- Loads DRBL class definitions and abuse-handling functions
+- **Settings management** -- Integrates with the MyAdmin settings system
+
+## Running Tests
+
+```sh
+composer install
+vendor/bin/phpunit
+```
+
 ## License
 
-The Drbl handling plugin for MyAdmin class is licensed under the LGPL-v2.1 license.
-
+Licensed under the LGPL-2.1. See [LICENSE](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html) for details.
