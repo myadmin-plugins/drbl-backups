@@ -21,7 +21,7 @@
 		"minimum-stability": "dev"
 	},
 	"require": {
-		"php": ">=8.1",
+		"php": ">=7.4",
 		"ext-soap": "*",
 		"symfony/event-dispatcher": "^5.0||^6.0||^7.0",
 		"detain/myadmin-plugin-installer": "dev-master"
