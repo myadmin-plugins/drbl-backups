@@ -514,7 +514,7 @@ class PluginTest extends TestCase
     public function testGetMenuReferencesAdminCheck(): void
     {
         $source = file_get_contents($this->reflection->getFileName());
-        $this->assertStringContainsString("\$GLOBALS['tf']->ima == 'admin'", $source);
+        $this->assertStringContainsString("\\MyAdmin\App::ima() == 'admin'", $source);
     }
 
     /**
