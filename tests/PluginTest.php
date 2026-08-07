@@ -475,38 +475,6 @@ class PluginTest extends TestCase
     }
 
     /**
-     * Verify getRequirements references the expected requirement paths.
-     *
-     * @return void
-     */
-    public function testGetRequirementsReferencedPaths(): void
-    {
-        $source = file_get_contents($this->reflection->getFileName());
-        $this->assertStringContainsString('class.Drbl', $source);
-        $this->assertStringContainsString('deactivate_kcare', $source);
-        $this->assertStringContainsString('deactivate_abuse', $source);
-        $this->assertStringContainsString('get_abuse_licenses', $source);
-    }
-
-    /**
-     * Verify getRequirements references the correct vendor path pattern.
-     *
-     * @return void
-     */
-    public function testGetRequirementsVendorPaths(): void
-    {
-        $source = file_get_contents($this->reflection->getFileName());
-        $this->assertStringContainsString(
-            '/../vendor/detain/myadmin-drbl-backups/src/Drbl.php',
-            $source
-        );
-        $this->assertStringContainsString(
-            '/../vendor/detain/myadmin-drbl-backups/src/abuse.inc.php',
-            $source
-        );
-    }
-
-    /**
      * Verify getMenu references the GLOBALS tf->ima admin check.
      *
      * @return void
@@ -565,21 +533,6 @@ class PluginTest extends TestCase
     }
 
     /**
-     * Verify getRequirements references add_requirement calls via the loader.
-     *
-     * @return void
-     */
-    public function testGetRequirementsUsesLoaderAddRequirement(): void
-    {
-        $source = file_get_contents($this->reflection->getFileName());
-        $this->assertSame(
-            4,
-            substr_count($source, 'add_requirement'),
-            'getRequirements should call add_requirement exactly 4 times'
-        );
-    }
-
-    /**
      * Verify getSettings retrieves the subject from the event.
      *
      * @return void
@@ -632,14 +585,32 @@ class PluginTest extends TestCase
     // ---------------------------------------------------------------
 
     /**
-     * Verify getRequirements registers the expected four requirements.
+     * Verify every source getRequirements registers resolves to a file that exists.
      *
-     * Uses an anonymous class as a stand-in for the real loader to capture
-     * the add_requirement calls without depending on vendor internals.
+     * function_requirements() require_once's whatever path it finds in the loader
+     * table, so a registered path that points at nothing is a fatal waiting for the
+     * first request that needs that identifier. This replaces the previous
+     * testGetRequirementsReferencedPaths / testGetRequirementsVendorPaths /
+     * testGetRequirementsUsesLoaderAddRequirement /
+     * testGetRequirementsRegistersCorrectRequirements /
+     * testGetRequirementsRegistersCorrectPaths, all of which only inspected the
+     * registration table (or the source text) and never the filesystem -- so they
+     * stayed green for years while all four registrations pointed at src/Drbl.php
+     * and src/abuse.inc.php, files that have never existed in this package.
+     *
+     * The registration table is now empty, so this passes vacuously today. That is
+     * the correct result: it asserts a property of whatever is registered, and it
+     * will fail the moment a dangling path is added back.
+     *
+     * Registered values are written relative to core's INCLUDE_ROOT and take the
+     * shape '/../vendor/<composer-name>/<tail>', climbing back out of include/ into
+     * vendor/ and landing inside this package, so <tail> is resolved against the
+     * package root. Anything else is resolved against a core include/ directory when
+     * this package is running from inside a core checkout.
      *
      * @return void
      */
-    public function testGetRequirementsRegistersCorrectRequirements(): void
+    public function testEveryRegisteredRequirementSourceExistsOnDisk(): void
     {
         $loader = new class {
             /** @var array<int, array{0: string, 1: string}> */
@@ -654,42 +625,29 @@ class PluginTest extends TestCase
         $event = new \Symfony\Component\EventDispatcher\GenericEvent($loader);
         Plugin::getRequirements($event);
 
-        $this->assertCount(4, $loader->requirements);
+        $packageDir = dirname($this->reflection->getFileName(), 2);
+        $selfPrefix = '/../vendor/detain/myadmin-drbl-backups/';
+        $includeRoot = dirname($packageDir, 3).'/include';
 
-        $names = array_column($loader->requirements, 0);
-        $this->assertContains('class.Drbl', $names);
-        $this->assertContains('deactivate_kcare', $names);
-        $this->assertContains('deactivate_abuse', $names);
-        $this->assertContains('get_abuse_licenses', $names);
-    }
-
-    /**
-     * Verify getRequirements paths point to the expected source files.
-     *
-     * @return void
-     */
-    public function testGetRequirementsRegistersCorrectPaths(): void
-    {
-        $loader = new class {
-            /** @var array<int, array{0: string, 1: string}> */
-            public array $requirements = [];
-
-            public function add_requirement(string $name, string $path): void
-            {
-                $this->requirements[] = [$name, $path];
+        foreach ($loader->requirements as [$name, $path]) {
+            if (strpos($path, $selfPrefix) === 0) {
+                $resolved = $packageDir.'/'.substr($path, strlen($selfPrefix));
+            } else {
+                if (!is_dir($includeRoot)) {
+                    // Not running from inside a core checkout; nothing to resolve against.
+                    continue;
+                }
+                $resolved = $includeRoot.'/'.ltrim($path, '/');
             }
-        };
 
-        $event = new \Symfony\Component\EventDispatcher\GenericEvent($loader);
-        Plugin::getRequirements($event);
+            $this->assertFileExists(
+                $resolved,
+                "Requirement '{$name}' registers '{$path}', which resolves to '{$resolved}' -- no such file"
+            );
+        }
 
-        $paths = array_column($loader->requirements, 1);
-        $this->assertContains('/../vendor/detain/myadmin-drbl-backups/src/Drbl.php', $paths);
-        $this->assertContains('/../vendor/detain/myadmin-drbl-backups/src/abuse.inc.php', $paths);
-
-        // abuse.inc.php should be referenced exactly 3 times
-        $abusePaths = array_filter($paths, static fn(string $p) => str_contains($p, 'abuse.inc.php'));
-        $this->assertCount(3, $abusePaths);
+        // Guard against the loop above being silently empty of assertions.
+        $this->assertIsArray($loader->requirements);
     }
 
     // ---------------------------------------------------------------

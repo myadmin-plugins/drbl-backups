@@ -56,10 +56,6 @@ class Plugin
          * @var \MyAdmin\Plugins\Loader $this->loader
          */
         $loader = $event->getSubject();
-        $loader->add_requirement('class.Drbl', '/../vendor/detain/myadmin-drbl-backups/src/Drbl.php');
-        $loader->add_requirement('deactivate_kcare', '/../vendor/detain/myadmin-drbl-backups/src/abuse.inc.php');
-        $loader->add_requirement('deactivate_abuse', '/../vendor/detain/myadmin-drbl-backups/src/abuse.inc.php');
-        $loader->add_requirement('get_abuse_licenses', '/../vendor/detain/myadmin-drbl-backups/src/abuse.inc.php');
     }
 
     /**
