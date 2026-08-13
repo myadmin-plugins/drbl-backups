@@ -1,6 +1,6 @@
 ---
 name: phpunit-plugin-test
-description: Creates or extends PHPUnit 9.6 tests in `tests/PluginTest.php` under namespace `Detain\MyAdminDrbl\Tests\`. Use when user says 'write test', 'add test case', 'test this method', or coverage is needed for `src/Plugin.php`. Follows bootstrap in `phpunit.xml.dist`. Do NOT use for integration tests against a real MyAdmin install or for testing files outside `src/Plugin.php`. NOTE: for a plugin's contract/behavioral tests (tests/ContractTest.php, the shared harness, composer myadmin:scaffold-tests) use the plugin-contract-tests skill instead — this skill's reflection-only guidance predates that harness.
+description: Creates or extends PHPUnit 9.6 tests in `tests/PluginTest.php` under namespace `Detain\MyAdminDrbl\Tests\`. Use when user says 'write test', 'add test case', 'test this method', or coverage is needed for `src/Plugin.php`. Follows bootstrap in `phpunit.xml.dist`. Do NOT use for integration tests against a real MyAdmin install or for testing files outside `src/Plugin.php`. For a plugin's contract or behavioral tests (tests/ContractTest.php, the shared harness, composer myadmin:scaffold-tests) use the plugin-contract-tests skill instead — this skill's reflection-only guidance predates that harness.
 ---
 <!-- myadmin-contract-harness-notice -->
 > ### ⚠️ Read this before the rest of the file
